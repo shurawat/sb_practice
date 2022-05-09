@@ -3,6 +3,7 @@ package com.learn.sb.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +22,27 @@ public class UserController {
 	@Autowired
 	IUserService userService;
 	
+	@Value("${sb.local.name}")
+	String name;
+	
+	@Value("${sb.local.lname}")
+	String lname;
+	
+	
 	@GetMapping({"/user/{id}", "/user"})
 	public User getUserName(@PathVariable(required = false ) String id) {
 		return userService.getUserName(Integer.parseInt(id));
 	}
 	
+	@GetMapping({"/name"})
+	public String getName() {
+		return name + " - " + lname;
+	}
+	
 	@DeleteMapping("/user/{id}")	
 	public String deleteUser(@PathVariable(required = true) Integer id) {
-		return userService.deleteUser(id);
+		userService.deleteUser(id);
+		return name + " - " + lname;
 	}
 	
 	@PostMapping("/user")
